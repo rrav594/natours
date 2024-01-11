@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/rrav594/natours#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.3.1",
     "eslint": "^8.56.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -28,10 +29,12 @@
     "eslint-plugin-prettier": "^5.1.0",
     "eslint-plugin-react": "^7.33.2",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
     "morgan": "^1.10.0",
     "nodemon": "^3.0.2",
     "prettier": "^3.1.1",
-    "slugify": "^1.6.6"
+    "slugify": "^1.6.6",
+    "validator": "^13.11.0"
   }
 }
