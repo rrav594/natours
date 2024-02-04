@@ -1,3 +1,4 @@
+const { util, promisify } = require("util");
 const User = require("../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
@@ -51,7 +52,7 @@ exports.login = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.protect = catchAsync((req, res, next) => {
+exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check if it's there
   let token;
   if (
@@ -67,10 +68,20 @@ exports.protect = catchAsync((req, res, next) => {
     );
   }
   // 2) Verification token
+  const decoded = promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   // 3) Check if user still exists
-
+  const freshUser = await User.findById(decoded.id);
+  if (!freshUser) {
+    return next(new AppError("User does not exist", 401));
+  }
   // 4) Check if user changes password after jwt-token issued
-
+  if (freshUser.changedPasswordAfter(decoded.iat)) {
+    next(
+      new AppError("User recently changed password! Please log in again", 401),
+    );
+  }
+  // grant access to protected route
+  req.user = freshUser;
   next();
 });
